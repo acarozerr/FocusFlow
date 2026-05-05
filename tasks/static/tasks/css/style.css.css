@@ -1,17 +1,431 @@
-body {
-    background-color: #f0f4f8;
+:root {
+    --ff-bg: #f4efe6;
+    --ff-bg-soft: #ebe2d2;
+    --ff-surface: #fffdf8;
+    --ff-surface-strong: #ffffff;
+    --ff-border: #ddcfb7;
+    --ff-text: #24303a;
+    --ff-text-soft: #6e7681;
+    --ff-accent: #8b6f3d;
+    --ff-accent-strong: #6f572c;
+    --ff-accent-soft: #efe4cf;
+    --ff-success: #5f7a65;
+    --ff-danger-soft: #f8ebe6;
+    --ff-shadow: 0 18px 45px rgba(69, 48, 21, 0.08);
+    --ff-radius-lg: 24px;
+    --ff-radius-md: 18px;
 }
 
-.card {
+body.focusflow-body {
+    font-family: "Manrope", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.82), transparent 30%),
+        linear-gradient(180deg, #f8f4ec 0%, var(--ff-bg) 100%);
+    color: var(--ff-text);
+    min-height: 100vh;
+}
+
+.focusflow-navbar {
+    background: rgba(255, 251, 244, 0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(140, 111, 61, 0.14);
+}
+
+.focusflow-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    text-decoration: none;
+    color: var(--ff-text);
+}
+
+.focusflow-brand:hover,
+.focusflow-brand:focus {
+    color: var(--ff-text);
+}
+
+.focusflow-brand strong {
+    display: block;
+    line-height: 1.1;
+    font-size: 1.08rem;
+}
+
+.focusflow-brand small {
+    display: block;
+    color: var(--ff-text-soft);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.focusflow-brand-mark {
+    width: 2.7rem;
+    height: 2.7rem;
     border-radius: 1rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #8b6f3d, #b59a63);
+    color: #fffaf2;
+    box-shadow: 0 12px 28px rgba(139, 111, 61, 0.24);
 }
 
-.navbar-brand {
-    font-weight: bold;
-    font-size: 1.4rem;
+.focusflow-user-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(139, 111, 61, 0.1);
+    color: var(--ff-text);
+    font-weight: 700;
 }
 
-.btn-outline-success {
-    border-radius: 20px;
+.focusflow-icon-button,
+.focusflow-secondary-button,
+.focusflow-primary-button {
+    border-radius: 999px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.focusflow-icon-button {
+    width: 2.7rem;
+    height: 2.7rem;
+    border: 1px solid var(--ff-border);
+    color: var(--ff-text);
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.focusflow-secondary-button {
+    background: transparent;
+    border: 1px solid var(--ff-border);
+    color: var(--ff-text);
+}
+
+.focusflow-secondary-button:hover,
+.focusflow-icon-button:hover {
+    background: rgba(139, 111, 61, 0.08);
+    border-color: rgba(139, 111, 61, 0.35);
+    color: var(--ff-text);
+}
+
+.focusflow-primary-button {
+    background: linear-gradient(135deg, var(--ff-accent), #b08b4f);
+    border: none;
+    color: #fffdf8;
+    box-shadow: 0 12px 28px rgba(139, 111, 61, 0.24);
+}
+
+.focusflow-primary-button:hover,
+.focusflow-primary-button:focus {
+    background: linear-gradient(135deg, var(--ff-accent-strong), #9e7f48);
+    color: #fffdf8;
+    transform: translateY(-1px);
+}
+
+.focusflow-main .container,
+.focusflow-shell {
+    position: relative;
+}
+
+.focusflow-page-card,
+.card,
+.list-group-item,
+.alert,
+.focusflow-panel {
+    border-radius: var(--ff-radius-md);
+    border: 1px solid rgba(220, 207, 182, 0.9);
+    box-shadow: var(--ff-shadow);
+}
+
+.focusflow-page-card,
+.card,
+.list-group-item,
+.focusflow-panel {
+    background: rgba(255, 253, 248, 0.94);
+}
+
+.focusflow-page-header h1,
+.focusflow-page-header h2,
+.focusflow-page-header h3 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.35rem;
+}
+
+.focusflow-page-header p {
+    color: var(--ff-text-soft);
+    margin-bottom: 0;
+    max-width: 42rem;
+}
+
+.focusflow-section-label {
+    color: var(--ff-accent-strong);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+}
+
+.focusflow-task-meta,
+.focusflow-muted,
+.text-muted {
+    color: var(--ff-text-soft) !important;
+}
+
+.focusflow-alert {
+    background: rgba(255, 253, 248, 0.94);
+}
+
+.focusflow-filter-bar .form-label {
+    margin-bottom: 0.45rem;
+}
+
+.focusflow-status-badge,
+.focusflow-priority-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.focusflow-status-badge {
+    border: 1px solid transparent;
+}
+
+.focusflow-status-todo {
+    background: #eef2f6;
+    color: #526073;
+}
+
+.focusflow-status-progress {
+    background: #f6ebd8;
+    color: #8b6f3d;
+}
+
+.focusflow-status-blocked {
+    background: #f8e2dd;
+    color: #a33b2f;
+}
+
+.focusflow-status-done {
+    background: #e7f2ea;
+    color: #4f7257;
+}
+
+.focusflow-priority-pill {
+    background: rgba(139, 111, 61, 0.09);
+    color: var(--ff-accent-strong);
+}
+
+.focusflow-note-preview {
+    border-left: 3px solid rgba(139, 111, 61, 0.38);
+    padding: 0.65rem 0 0.65rem 0.9rem;
+    color: var(--ff-text);
+    background: rgba(139, 111, 61, 0.04);
+    border-radius: 0 12px 12px 0;
+}
+
+.focusflow-overdue {
+    border-color: rgba(184, 71, 59, 0.45);
+    box-shadow: 0 16px 36px rgba(184, 71, 59, 0.08);
+}
+
+.focusflow-empty {
+    border-radius: var(--ff-radius-lg);
+    background: rgba(255, 253, 248, 0.82);
+    border: 1px dashed rgba(139, 111, 61, 0.35);
+    color: var(--ff-text-soft);
+}
+
+.focusflow-form-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.focusflow-login-shell {
+    min-height: 100vh;
+    font-family: "Manrope", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.7), transparent 28%),
+        linear-gradient(180deg, #f8f4ec 0%, #efe4d0 100%);
+}
+
+.focusflow-login-panel {
+    max-width: 460px;
+    width: 100%;
+    border-radius: 28px;
+    border: 1px solid rgba(220, 207, 182, 0.95);
+    background: rgba(255, 252, 247, 0.95);
+    box-shadow: 0 24px 55px rgba(68, 48, 23, 0.12);
+}
+
+.focusflow-login-brand {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.focusflow-login-brand h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.focusflow-login-brand p {
+    color: var(--ff-text-soft);
+}
+
+.focusflow-input,
+.focusflow-select,
+.focusflow-textarea {
+    border-radius: 14px;
+    border: 1px solid var(--ff-border);
+    padding: 0.82rem 0.95rem;
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--ff-text);
+}
+
+.focusflow-input:focus,
+.focusflow-select:focus,
+.focusflow-textarea:focus,
+.form-check-input:focus {
+    border-color: rgba(139, 111, 61, 0.7);
+    box-shadow: 0 0 0 0.2rem rgba(139, 111, 61, 0.12);
+}
+
+.focusflow-input-addon {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--ff-border);
+    border-right: 0;
+    color: var(--ff-text-soft);
+    border-radius: 14px 0 0 14px;
+}
+
+.focusflow-input-joined {
+    border-left: 0;
+    border-radius: 0 14px 14px 0;
+}
+
+.list-group {
+    display: grid;
+    gap: 0.95rem;
+}
+
+.list-group-item {
+    padding: 1.15rem 1.2rem;
+}
+
+.list-group-item-success {
+    background: linear-gradient(180deg, #fbfffb 0%, #f0f7f1 100%);
+}
+
+.btn-outline-danger {
+    border-radius: 999px;
+}
+
+.focusflow-stat-card {
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(249, 243, 231, 0.92));
+}
+
+.focusflow-stat-card .display-6 {
+    font-weight: 800;
+}
+
+.focusflow-calendar-card {
+    padding: 1.5rem;
+}
+
+#calendar {
+    background: rgba(255, 253, 248, 0.7);
+    border-radius: 18px;
+    padding: 0.8rem;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.fc .fc-button-primary {
+    background: var(--ff-accent);
+    border-color: var(--ff-accent);
+}
+
+.fc .fc-button-primary:hover,
+.fc .fc-button-primary:focus {
+    background: var(--ff-accent-strong);
+    border-color: var(--ff-accent-strong);
+}
+
+.form-check-input:checked {
+    background-color: var(--ff-accent);
+    border-color: var(--ff-accent);
+}
+
+.dark-mode {
+    --ff-bg: #1d1a17;
+    --ff-bg-soft: #292420;
+    --ff-surface: #2b2621;
+    --ff-surface-strong: #352f29;
+    --ff-border: #55483b;
+    --ff-text: #f3ede3;
+    --ff-text-soft: #d0c4b3;
+    --ff-accent: #c0a26a;
+    --ff-accent-strong: #d7b87b;
+    --ff-success: #81a28b;
+    --ff-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+}
+
+.dark-mode.focusflow-body {
+    background: linear-gradient(180deg, #191614 0%, #241f1b 100%);
+}
+
+.dark-mode .focusflow-navbar,
+.dark-mode .focusflow-page-card,
+.dark-mode .card,
+.dark-mode .list-group-item,
+.dark-mode .focusflow-panel,
+.dark-mode .focusflow-alert,
+.dark-mode .focusflow-login-panel,
+.dark-mode #calendar {
+    background: rgba(43, 38, 33, 0.95);
+    color: var(--ff-text);
+}
+
+.dark-mode .focusflow-empty {
+    background: rgba(43, 38, 33, 0.85);
+}
+
+.dark-mode .focusflow-input,
+.dark-mode .focusflow-input-addon,
+.dark-mode .focusflow-select,
+.dark-mode .focusflow-textarea {
+    background: rgba(53, 47, 41, 0.96);
+    color: var(--ff-text);
+    border-color: var(--ff-border);
+}
+
+.dark-mode .focusflow-secondary-button,
+.dark-mode .focusflow-icon-button {
+    color: var(--ff-text);
+}
+
+@media (max-width: 767.98px) {
+    .focusflow-form-card {
+        padding: 1.4rem;
+    }
+
+    .focusflow-login-brand h1 {
+        font-size: 2rem;
+    }
+
+    .focusflow-login-panel {
+        padding: 1.5rem !important;
+    }
 }

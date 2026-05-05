@@ -1,26 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
-<div class="container mt-5">
-    <h2 class="mb-4">Task Calendar</h2>
-    <div id="calendar"></div>
+<div class="container">
+    <div class="focusflow-page-card focusflow-calendar-card">
+        <div class="focusflow-page-header mb-4">
+            <div class="focusflow-section-label mb-2">Schedule</div>
+            <h2>Task Calendar</h2>
+            <p>See upcoming deadlines in a calmer monthly view.</p>
+        </div>
+        <div id="calendar"></div>
+    </div>
 </div>
 
-<!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
+    document.addEventListener("DOMContentLoaded", function () {
+        const calendarEl = document.getElementById("calendar");
         const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
+            initialView: "dayGridMonth",
             headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,listWeek'
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,listWeek"
             },
             events: {{ events|safe }},
             height: "auto"

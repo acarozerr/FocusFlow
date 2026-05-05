@@ -1,23 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">All Tasks</h2>
+<div class="container">
+    <div class="focusflow-page-card p-4 p-lg-5">
+        <div class="focusflow-page-header mb-4">
+            <div class="focusflow-section-label mb-2">Overview</div>
+            <h2>All Tasks</h2>
+            <p>A complete view of every assignment currently in the workspace.</p>
+        </div>
 
-    {% if tasks %}
-        <ul class="list-group">
-            {% for task in tasks %}
-                <li class="list-group-item {% if task.completed %}list-group-item-success{% endif %}">
-                    <strong>{{ task.title }}</strong><br>
-                    <small>{{ task.description }}</small><br>
-                    <small class="text-muted">Due: {{ task.due_date|date:"d M Y" }}</small><br>
-                    <small><strong>Assigned to:</strong> {{ task.assigned_to.all|join:", " }}</small><br>
-                    <small>Status: {% if task.completed %}✔️ Completed{% else %}❌ Incomplete{% endif %}</small>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <div class="alert alert-info">No tasks found.</div>
-    {% endif %}
+        {% if tasks %}
+            <ul class="list-group">
+                {% for task in tasks %}
+                    <li class="list-group-item {% if task.completed %}list-group-item-success{% endif %}">
+                        <strong class="d-block fs-5 mb-1">{{ task.title }}</strong>
+                        <p class="mb-2 focusflow-task-meta">{{ task.description }}</p>
+                        <div class="small focusflow-task-meta">
+                            Due {{ task.due_date|date:"d M Y" }} · Assigned to {{ task.formatted_assignees }} ·
+                            {% if task.completed %}Completed{% else %}Incomplete{% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="focusflow-empty p-4">No tasks found.</div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

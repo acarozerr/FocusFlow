@@ -1,59 +1,98 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Admin Dashboard</h2>
+<div class="container">
+    <div class="focusflow-page-header mb-4">
+        <div class="focusflow-section-label mb-2">Admin View</div>
+        <h2>Workspace Dashboard</h2>
+        <p>Track task volume, completion progress, and workload distribution across the team.</p>
+    </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-bg-primary mb-3">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card focusflow-stat-card p-3">
                 <div class="card-body">
                     <h5 class="card-title">Total Tasks</h5>
                     <p class="card-text display-6">{{ total_tasks }}</p>
-                    <a href="{% url 'all_tasks' %}" class="btn btn-light btn-sm mt-2">See Details</a>
+                    <a href="{% url 'all_tasks' %}" class="btn focusflow-secondary-button btn-sm mt-2">See Details</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-bg-warning mb-3">
+        <div class="col-md-3">
+            <div class="card focusflow-stat-card p-3">
                 <div class="card-body">
-                    <h5 class="card-title">Incomplete Tasks</h5>
-                    <p class="card-text display-6">{{ incomplete_tasks }}</p>
-                    <a href="{% url 'incomplete_tasks' %}" class="btn btn-light btn-sm mt-2">See Details</a>
+                    <h5 class="card-title">Open Tasks</h5>
+                    <p class="card-text display-6">{{ open_tasks }}</p>
+                    <a href="{% url 'incomplete_tasks' %}" class="btn focusflow-secondary-button btn-sm mt-2">See Details</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-bg-success mb-3">
+        <div class="col-md-3">
+            <div class="card focusflow-stat-card p-3">
                 <div class="card-body">
-                    <h5 class="card-title">Completed Tasks</h5>
+                    <h5 class="card-title">Done Tasks</h5>
                     <p class="card-text display-6">{{ completed_tasks }}</p>
-                    <a href="{% url 'completed_tasks' %}" class="btn btn-light btn-sm mt-2">See Details</a>
+                    <a href="{% url 'completed_tasks' %}" class="btn focusflow-secondary-button btn-sm mt-2">See Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card focusflow-stat-card p-3">
+                <div class="card-body">
+                    <h5 class="card-title">Blocked Tasks</h5>
+                    <p class="card-text display-6">{{ blocked_tasks }}</p>
+                    <div class="focusflow-muted small mt-2">Needs attention first</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <h4 class="mt-5">Tasks by Priority</h4>
-    <ul class="list-group mb-4">
-        <li class="list-group-item d-flex justify-content-between">
-            <span>High</span> <span>{{ priority_high }}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-            <span>Medium</span> <span>{{ priority_medium }}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-            <span>Low</span> <span>{{ priority_low }}</span>
-        </li>
-    </ul>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="focusflow-page-card p-4 h-100">
+                <h4 class="mb-3">Tasks by Priority</h4>
+                <ul class="list-group mb-0">
+                    <li class="list-group-item d-flex justify-content-between"><span>High</span> <span>{{ priority_high }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Medium</span> <span>{{ priority_medium }}</span></li>
+                    <li class="list-group-item d-flex justify-content-between"><span>Low</span> <span>{{ priority_low }}</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="focusflow-page-card p-4 h-100">
+                <h4 class="mb-3">Tasks by Status</h4>
+                <ul class="list-group mb-0">
+                    {% for status, count in status_counts %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ status }}</span> <span>{{ count }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="focusflow-page-card p-4 h-100">
+                <h4 class="mb-3">Tasks by User</h4>
+                <ul class="list-group mb-0">
+                    {% for username, count in user_task_counts %}
+                        <li class="list-group-item d-flex justify-content-between"><span>{{ username|capfirst }}</span> <span>{{ count }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 
-    <h4 class="mt-4">Tasks by User</h4>
-    <ul class="list-group">
-        {% for username, count in user_task_counts %}
-            <li class="list-group-item d-flex justify-content-between">
-                <span>{{ username }}</span> <span>{{ count }}</span>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="row g-3 mt-1">
+        <div class="col-md-6">
+            <div class="focusflow-page-card p-4">
+                <h5 class="mb-2">Due Today</h5>
+                <p class="display-6 mb-0">{{ due_today }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="focusflow-page-card p-4">
+                <h5 class="mb-2">Overdue</h5>
+                <p class="display-6 mb-0">{{ overdue_tasks }}</p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

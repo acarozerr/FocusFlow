@@ -1,58 +1,117 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Task List</h2>
-        {% if user.is_superuser %}
-            <div class="d-flex gap-2">
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-info">
-                    <i class="fas fa-chart-bar"></i> View Dashboard
-                </a>
-                <a href="{% url 'calendar_view' %}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-calendar-alt"></i> View Calendar
-                </a>
+<div class="container">
+    <div class="focusflow-page-card p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 focusflow-page-header">
+            <div>
+                <div class="focusflow-section-label mb-2">Workspace Overview</div>
+                <h2 class="mb-2">Task Board</h2>
+                <p>Track open work, stay on top of deadlines, and keep assignments visible.</p>
             </div>
-        {% else %}
-            <a href="{% url 'completed_tasks' %}" class="btn btn-sm btn-outline-primary">Completed Tasks</a>
-        {% endif %}
+
+            {% if user.is_superuser %}
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'admin_dashboard' %}" class="btn focusflow-secondary-button btn-sm">
+                        <i class="fas fa-chart-bar"></i> Dashboard
+                    </a>
+                    <a href="{% url 'calendar_view' %}" class="btn focusflow-secondary-button btn-sm">
+                        <i class="fas fa-calendar-alt"></i> Calendar
+                    </a>
+                    <a href="{% url 'create_task' %}" class="btn focusflow-primary-button btn-sm">
+                        <i class="fas fa-plus"></i> New Task
+                    </a>
+                </div>
+            {% else %}
+                <a href="{% url 'completed_tasks' %}" class="btn focusflow-secondary-button btn-sm">
+                    <i class="fas fa-check-circle"></i> Completed Tasks
+                </a>
+            {% endif %}
+        </div>
     </div>
 
-    {% if user.is_superuser %}
-        <a href="{% url 'create_task' %}" class="btn btn-success mb-3">Assign New Task</a>
-    {% endif %}
+    <div class="focusflow-page-card p-4 mb-4">
+        <form method="get" class="row g-3 align-items-end focusflow-filter-bar">
+            <div class="col-lg-4">
+                <label for="filter-q" class="form-label fw-semibold">Search</label>
+                <input id="filter-q" type="text" name="q" value="{{ active_filters.q }}" class="form-control focusflow-input" placeholder="Search title, description, or note">
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <label for="filter-status" class="form-label fw-semibold">Status</label>
+                <select id="filter-status" name="status" class="form-select focusflow-select">
+                    <option value="">Open tasks</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if active_filters.status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <label for="filter-priority" class="form-label fw-semibold">Priority</label>
+                <select id="filter-priority" name="priority" class="form-select focusflow-select">
+                    <option value="">All priorities</option>
+                    {% for value, label in priority_choices %}
+                        <option value="{{ value }}" {% if active_filters.priority == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if user.is_superuser %}
+                <div class="col-md-4 col-lg-2">
+                    <label for="filter-assignee" class="form-label fw-semibold">Assignee</label>
+                    <select id="filter-assignee" name="assignee" class="form-select focusflow-select">
+                        <option value="">Everyone</option>
+                        {% for assignee in assignees %}
+                            <option value="{{ assignee.id }}" {% if active_filters.assignee == assignee.id|stringformat:"s" %}selected{% endif %}>{{ assignee.username|capfirst }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            <div class="col-md-4 col-lg-2 d-flex gap-2">
+                <button type="submit" class="btn focusflow-primary-button w-100">Apply</button>
+                <a href="{% url 'task_list' %}" class="btn focusflow-secondary-button">Reset</a>
+            </div>
+        </form>
+    </div>
 
     {% for category_obj in categorized_tasks %}
-        <h4 class="mt-4 text-{{ category_obj.color }}">
-            {{ category_obj.category }}
-        </h4>
+        <section class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h4 class="mb-0">{{ category_obj.category }}</h4>
+                <span class="focusflow-muted">{{ category_obj.tasks|length }} task{{ category_obj.tasks|length|pluralize }}</span>
+            </div>
 
-        {% if category_obj.tasks %}
-            <ul class="list-group">
-                {% for task in category_obj.tasks %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center {% if task.completed %}list-group-item-success{% endif %}">
-                        <div>
-                            <strong>{{ task.title }}</strong><br>
-                            <small>{{ task.description }}</small><br>
-                            <small class="text-muted">Due Date: {{ task.due_date|date:"d M Y" }}</small><br>
-                            <small><strong>Assigned to:</strong>
-                                {{ task.assigned_to.all|join:", " }}
-                            </small>
-                        </div>
-                        <div class="text-end">
-                            {% if not task.completed %}
-                                <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success mt-1">Complete</a>
-                            {% else %}
-                                <span class="badge bg-success mt-1"><i class="fas fa-check-circle"></i> Completed</span>
-                            {% endif %}
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="alert alert-secondary">No tasks in this category.</div>
-        {% endif %}
+            {% if category_obj.tasks %}
+                <ul class="list-group">
+                    {% for task in category_obj.tasks %}
+                        <li class="list-group-item d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 {% if task.completed %}list-group-item-success{% endif %} {% if task.is_overdue %}focusflow-overdue{% endif %}">
+                            <div>
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                    <strong class="d-block fs-5 mb-0">{{ task.title }}</strong>
+                                    <span class="focusflow-status-badge focusflow-status-{{ task.status_badge_class }}">{{ task.status }}</span>
+                                    <span class="focusflow-priority-pill">{{ task.priority }}</span>
+                                </div>
+                                <p class="mb-2 focusflow-task-meta">{{ task.description }}</p>
+                                {% if task.note %}
+                                    <div class="focusflow-note-preview mb-2">{{ task.note }}</div>
+                                {% endif %}
+                                <div class="focusflow-task-meta small">
+                                    Due {{ task.due_date|date:"d M Y" }} · Assigned to {{ task.formatted_assignees }}
+                                    {% if task.is_overdue %} · Overdue{% endif %}
+                                </div>
+                            </div>
+                            <div class="text-lg-end">
+                                {% if task.status != "Done" %}
+                                    <a href="{% url 'complete_task' task.id %}" class="btn focusflow-primary-button btn-sm mt-1">Mark Complete</a>
+                                {% else %}
+                                    <span class="badge rounded-pill text-bg-success mt-1 px-3 py-2"><i class="fas fa-check-circle"></i> Completed</span>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="focusflow-empty p-4">No tasks in this category yet.</div>
+            {% endif %}
+        </section>
     {% endfor %}
-
 </div>
 {% endblock %}
