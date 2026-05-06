@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: todo-list
+    name: focusflow
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn todo_list.wsgi:application"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn gorev_sistemi.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: gorev_sistemi.settings # Ana settings.py dosyanızın bulunduğu dizin ve dosya adı
@@ -13,4 +13,4 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: False
+        value: "False"
