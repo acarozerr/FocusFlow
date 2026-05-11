@@ -99,6 +99,9 @@
                                 </div>
                             </div>
                             <div class="text-lg-end">
+                                {% if user.is_superuser %}
+                                    <a href="{% url 'edit_task' task.id %}" class="btn focusflow-secondary-button btn-sm mt-1">Edit</a>
+                                {% endif %}
                                 {% if task.status != "Done" %}
                                     <a href="{% url 'complete_task' task.id %}" class="btn focusflow-primary-button btn-sm mt-1">Mark Complete</a>
                                 {% else %}

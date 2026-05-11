@@ -3,6 +3,8 @@ from .models import Task
 from django.contrib.auth.models import User
 
 class TaskForm(forms.ModelForm):
+    """Admin-facing task form with workflow and assignee controls."""
+
     assigned_to = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple(),
@@ -11,6 +13,7 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Present usernames in a more readable label format in the checkbox list.
         self.fields['assigned_to'].label_from_instance = lambda user: user.username.capitalize()
 
     class Meta:

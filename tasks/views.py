@@ -12,6 +12,7 @@ def is_admin(user):
 
 
 def get_filtered_tasks(request):
+    """Return the task queryset and active filters for the current user context."""
     if request.user.is_superuser:
         queryset = Task.objects.all().prefetch_related("assigned_to")
     else:
@@ -51,7 +52,7 @@ def get_filtered_tasks(request):
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, status=Task.STATUS_DONE)
 
-    # sadece admin veya kendi tamamladığı görevleri silebilir
+    # Completed tasks can be removed by admins or by users assigned to that task.
     if request.user.is_superuser or task.assigned_to.filter(id=request.user.id).exists():
         task.delete()
         messages.success(request, "Task deleted successfully.")
@@ -64,7 +65,7 @@ def delete_task(request, task_id):
 def task_list(request):
     base_tasks_query, active_filters = get_filtered_tasks(request)
 
-    # Filter tasks by priority
+    # The board is grouped by priority to keep the busiest items most visible.
     tasks_high = base_tasks_query.filter(priority='High')
     tasks_medium = base_tasks_query.filter(priority='Medium')
     tasks_low = base_tasks_query.filter(priority='Low')
@@ -111,9 +112,9 @@ def create_task(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            task = form.save(commit=False)  # görevi oluştur ama kaydetme
-            task.save()  # kaydet (ID oluşturulsun)
-            form.save_m2m()  # assigned_to gibi ManyToMany alanları kaydet
+            task = form.save(commit=False)
+            task.save()
+            form.save_m2m()
             messages.success(request, "New task successfully assigned.")
             return redirect('task_list')
     else:
@@ -121,7 +122,24 @@ def create_task(request):
     return render(request, 'tasks/create_task.html', {'form': form})
 
 @user_passes_test(is_admin)
+def edit_task(request, task_id):
+    task = get_object_or_404(Task.objects.prefetch_related("assigned_to"), id=task_id)
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Task updated successfully.")
+            return redirect('task_list')
+    else:
+        form = TaskForm(instance=task)
+
+    return render(request, 'tasks/edit_task.html', {'form': form, 'task': task})
+
+@user_passes_test(is_admin)
 def admin_dashboard(request):
+    # Dashboard metrics are computed live so they always reflect the current state
+    # of the workflow without needing stored aggregate tables.
     total_tasks = Task.objects.count()
     completed_tasks = Task.objects.filter(status=Task.STATUS_DONE).count()
     incomplete_tasks = Task.objects.exclude(status=Task.STATUS_DONE).count()

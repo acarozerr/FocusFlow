@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 
 class Task(models.Model):
+    """Workflow-aware task record that can be assigned to multiple users."""
+
     PRIORITY_CHOICES = [
         ('High', 'High'),
         ('Medium', 'Medium'),
@@ -24,11 +26,12 @@ class Task(models.Model):
     note = models.TextField(blank=True)
     due_date = models.DateField()
     completed = models.BooleanField(default=False)
-    assigned_to = models.ManyToManyField(User)  # 🔄 Multiple users can be assigned
+    assigned_to = models.ManyToManyField(User)
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='Medium')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_TODO)
 
     def save(self, *args, **kwargs):
+        # Keep the legacy completed flag aligned with the richer workflow status.
         self.completed = self.status == self.STATUS_DONE
         super().save(*args, **kwargs)
 

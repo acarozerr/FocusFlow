@@ -153,6 +153,61 @@ class CompletionFlowTests(TestCase):
         self.assertNotContains(response, "Open task")
 
 
+class TaskEditViewTests(TestCase):
+    def test_admin_can_update_a_task(self):
+        admin = User.objects.create_superuser("ozer", "", "admin")
+        assignee = User.objects.create_user("john.doe", password="user")
+        task = Task.objects.create(
+            title="Initial title",
+            description="Initial description",
+            note="Initial note",
+            due_date=date(2026, 5, 10),
+            priority="Medium",
+            status=Task.STATUS_TODO,
+        )
+        task.assigned_to.add(admin)
+
+        self.client.login(username="ozer", password="admin")
+        response = self.client.post(
+            f"/edit/{task.id}/",
+            {
+                "title": "Updated title",
+                "description": "Updated description",
+                "note": "Updated note",
+                "due_date": "2026-05-12",
+                "assigned_to": [str(assignee.id)],
+                "priority": "High",
+                "status": Task.STATUS_IN_PROGRESS,
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        task.refresh_from_db()
+        self.assertEqual(task.title, "Updated title")
+        self.assertEqual(task.description, "Updated description")
+        self.assertEqual(task.note, "Updated note")
+        self.assertEqual(task.priority, "High")
+        self.assertEqual(task.status, Task.STATUS_IN_PROGRESS)
+        self.assertEqual(task.assigned_to.get().username, "john.doe")
+
+    def test_non_admin_cannot_access_task_edit_page(self):
+        user = User.objects.create_user("john.doe", password="user")
+        task = Task.objects.create(
+            title="Member task",
+            description="Should stay protected",
+            due_date=date(2026, 5, 10),
+            status=Task.STATUS_TODO,
+        )
+        task.assigned_to.add(user)
+
+        self.client.login(username="john.doe", password="user")
+        response = self.client.get(f"/edit/{task.id}/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response.url)
+
+
 class DashboardTests(TestCase):
     def test_dashboard_shows_workflow_counts(self):
         User.objects.create_superuser("ozer", "", "admin")
