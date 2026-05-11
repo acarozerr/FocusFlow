@@ -37,7 +37,7 @@ This separation keeps the project maintainable and makes each layer easier to te
   - workflow sync logic
 
 - `tasks/views.py`
-  - task listing, filtering, completion, dashboard metrics, and calendar data
+  - task listing, filtering, editing, completion, dashboard metrics, and calendar data
 
 - `tasks/forms.py`
   - `TaskForm` for controlled task creation
@@ -96,6 +96,9 @@ The request flow is:
 
 - `/completed/`
   - shows archived completed tasks
+
+- `/edit/<task_id>/`
+  - allows admins to update an existing task through the shared task form
 
 - `/admin-dashboard/`
   - computes high-level workflow metrics
@@ -204,6 +207,7 @@ The current test suite covers:
 - form structure
 - admin filtering behavior
 - user visibility rules
+- task editing authorization and update behavior
 - completion flow
 - dashboard output
 
@@ -252,6 +256,7 @@ FocusFlow is not only a functional task board but also a structured Django appli
 
 - sound relational modeling
 - view-layer business logic
+- full CRUD coverage for task records
 - role-based access control
 - UI separation between admin and regular users
 - practical deployment to the web

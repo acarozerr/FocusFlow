@@ -37,6 +37,7 @@ FocusFlow addresses these issues with a single web application built on Django's
 ### Task Management
 
 - Create tasks through a dedicated admin workflow
+- Edit existing tasks through an admin-only update screen
 - View active and completed tasks
 - Assign tasks to one or more users
 - Mark tasks as completed
@@ -207,6 +208,7 @@ The current project includes tests for:
 - filtering behavior
 - user visibility rules
 - completion flow
+- task editing permissions and update flow
 - dashboard workflow counts
 
 ## Deployment
@@ -235,7 +237,7 @@ The project relies on Django's built-in validation and defensive patterns:
 
 ## Current Scope Notes
 
-The current release focuses on a strong, stable workflow experience. It includes task creation, viewing, completion, filtering, reporting, and deployment. A dedicated task edit screen is not yet included in this version.
+The current release focuses on a strong, stable workflow experience. It includes task creation, viewing, editing, completion, filtering, reporting, and deployment.
 
 ## Team Presentation Notes
 
@@ -245,6 +247,7 @@ If this repository is being used for a course presentation, the most important t
 - `Task` to `User` many-to-many relationship
 - workflow status system and completion sync
 - role-based permissions
+- full CRUD support through create, read, update, and delete flows
 - search and filtering logic
 - Render deployment pipeline
 
